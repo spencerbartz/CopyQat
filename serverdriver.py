@@ -1,17 +1,24 @@
-from CopyCat import Server
-
 import getopt
 import sys
 import signal
+
+from CopyCat import Server
+from CopyCat import KennyLogger
 
 server = None
 running = False
 
 def main():
     
+    kennyLogger = KennyLogger.KennyLogger()
+    kennyLogger.initialize("serverlogs")
+    
+    saveFolder = "CopyCatFiles"
+    port = 8181
+    
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hf:v", ["help", "file"])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:p:", ["help", "savefolder", "port"])
     except getopt.GetOptError as msg:
         print(msg)
         print("for help use --help")
@@ -19,18 +26,18 @@ def main():
         
     # process options
     for o, a in opts:
-        if o in ("-h", "--help"):
-            print("something helpful")
+        if o in ("-h", "--help", "-help"):
+            print("Example Usage: python serverdriver.py --savefolder c:\somepath\somefolder --port 8181")
             sys.exit(0)
-            
-    # process arguments
-    for arg in args:
-        print(arg) # process() is defined elsewhere
+        elif o in ("-s", "--savefolder", "-savefolder"):
+            saveFolder = a
+        elif o in ("-p", "--port", "-port"):
+            port = int(a)
 
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    server = Server.Server()
+    server = Server.Server(saveFolder, port)
     #TODO: this must raise some kind of exception we should be handling    
     server.start()
     running = True
