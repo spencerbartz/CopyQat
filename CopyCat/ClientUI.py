@@ -25,7 +25,7 @@ class ClientUI(Frame):
         os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
 
         self.style = Style()
-        self.style.theme_use("aqua")
+        self.style.theme_use("default")
 
         # Create a frame for file list and attach to self
         file_frame = Frame(self, relief=RAISED, borderwidth=1)
@@ -80,3 +80,4 @@ class ClientUI(Frame):
 if __name__ == '__main__':
      c = ClientUI()
      c.start()
+

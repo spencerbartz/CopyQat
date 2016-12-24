@@ -36,7 +36,7 @@ class Server(threading.Thread):
         #Create Server Socket and start listening
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.serversocket.bind(("127.0.0.1", self.port))
+        self.serversocket.bind(('', port))
         self.serversocket.listen(self.maxConn)
         self.running = True
 
@@ -67,8 +67,8 @@ class Server(threading.Thread):
             except OSError as e:
                 #most likely serversocket.close() was called by shutdown(), which also
                 #sets self.running to false so we will not start listening for connections
-                self.kennyLogger.logDebug("Handled OSError in main server loop " + str(e))
-                pass
+             	self.kennyLogger.logDebug("Handled OSError in main server loop " + str(e))
+              	pass
 
 
     #################################################################
