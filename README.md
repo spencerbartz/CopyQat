@@ -1,4 +1,4 @@
-# copycat
+# CopyQat
 A Client / Server file transfer program. 
 Currently command line only. 
 Unfortunately I lost the code for the GUI based extended version I was working on 
