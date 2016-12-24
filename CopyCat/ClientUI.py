@@ -4,18 +4,20 @@ from ttk import Frame, Button, Style, Label, Entry
 
 import ttk
 import tkFont
+import tkFileDialog
 
 class ClientUI(Frame):
-
     def __init__(self):
         self.parent = Tk()
         Frame.__init__(self, self.parent)
-        self.initUI()
+        self.init_ui()
+        self.file_queue = []
+        self.file_opt = {}
 
-    def initUI(self):
+    def init_ui(self):
         self.parent.title("Copy Qat")
         self.pack(fill = BOTH, expand = True)
-        self.centerWindow()
+        self.center_window()
 
         self.parent.attributes("-topmost", True)
         self.parent.focus_force()
@@ -27,27 +29,29 @@ class ClientUI(Frame):
         self.style = Style()
         self.style.theme_use("aqua")
 
-        fileFrame = Frame(self, relief=RAISED, borderwidth=1)
-        fileFrame.pack(fill=X)
+        # Create a frame for file list and attach to self
+        file_frame = Frame(self, relief=RAISED, borderwidth=1)
+        file_frame.pack(fill=X)
 
-        fileLabel = Label(fileFrame, text="Files", width=6)
+        fileLabel = Label(file_frame, text="Files", width=6)
         fileLabel.pack(side=LEFT, anchor=N, padx=5, pady=5)
 
-        fileList = Listbox(fileFrame)
-        fileList.pack(side=LEFT, fill=BOTH, pady=5, padx=(0,50), expand=True)
+        self.file_list = Listbox(file_frame)
+        self.file_list.pack(side=LEFT, fill=BOTH, pady=5, padx=(0,50), expand=True)
 
-        buttonFrame = Frame(self)
-        buttonFrame.pack(fill=BOTH)
+        # Create a frame for buttons and attach to self
+        button_frame = Frame(self)
+        button_frame.pack(fill=BOTH)
 
-        # padx can take a 2-tuple for left and right padding
-        closeButton = Button(buttonFrame, text="Exit", command=self.quit)
-        closeButton.pack(side=RIGHT, padx=(5, 50))
-        sendButton = Button(buttonFrame, text="Send Files", command=self.quit)
-        sendButton.pack(side=RIGHT, padx=(5, 5))
-        okButton = Button(buttonFrame, text="Add File(s)")
-        okButton.pack(side=RIGHT, padx=(5, 5))
+        # Attach buttons to button_frame. padx can take a 2-tuple for left and right padding
+        close_button = Button(button_frame, text="Exit", command=self.quit)
+        close_button.pack(side=RIGHT, padx=(5, 50))
+        send_button = Button(button_frame, text="Send Files")
+        send_button.pack(side=RIGHT, padx=(5, 5))
+        ok_button = Button(button_frame, text="Add File(s)", command=self.add_file_to_queue)
+        ok_button.pack(side=RIGHT, padx=(5, 5))
 
-    def centerWindow(self):
+    def center_window(self):
         width = 600
         height = 250
 
@@ -58,9 +62,14 @@ class ClientUI(Frame):
         y = (screen_height - height) / 2
         self.parent.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
+    def add_file_to_queue(self):
+        file_opt_file = tkFileDialog.askopenfile(mode='r')
+        self.file_queue.append(file_opt_file)
+        self.file_list.insert(END, file_opt_file)
 
     def start(self):
         self.parent.mainloop()
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+     c = ClientUI()
+     c.start()
