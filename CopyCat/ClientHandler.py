@@ -15,13 +15,14 @@ class ClientHandler(threading.Thread):
 
     def __init__(self, clientsocket, saveDir, address):
         super(ClientHandler, self).__init__()
-        print("Started ClientHandler")
         self.clientsocket = clientsocket
         self.saveDir = saveDir
         self.address = address
         self.fileNames = []
         self.fileSizes = []
         self.kennyLogger = KennyLogger.KennyLogger()
+        self.kennyLogger.logInfo("Started ClientHandler")
+
 
     #################################################################
     # run()
@@ -62,21 +63,18 @@ class ClientHandler(threading.Thread):
                     break
                 else:
                     outFile.write(data)
-                    #buffer.extend(data)
                     totalRead += len(data)
-                    #print("total read ", totalRead)
-
-            #print(buffer)
-            #outfile.write(buffer)
+                    print fileName + "- PERCENT READ: " +  str(round(float(totalRead) / float(fileSize) * 100, 2)) + "%"
 
             #Tell the client the file was received and written
             self.sendAck()
 
             elapsed = timeit.default_timer() - startTime
             outFile.close()
-            self.kennyLogger.logInfo("File Received: " + fileName + "(" + elapsed + " seconds)")
+            self.kennyLogger.logInfo("File Received: " + fileName + " (" + str(elapsed) + " seconds)")
 
-        self.kennyLogger.logInfo("Connection Closed: " + self.address[0] + " on port " + str(self.address[1]))    
+        # Finished receiving file(s)
+        self.kennyLogger.logInfo("Connection Closed: " + self.address[0] + " on port " + str(self.address[1]))
         self.clientsocket.close()
 
     #################################################################
