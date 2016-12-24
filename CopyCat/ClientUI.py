@@ -1,7 +1,7 @@
 from PIL import Image, ImageTk
 from Tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END
 from ttk import Frame, Button, Style, Label, Entry
-
+from CopyCat import Client
 import ttk
 import tkFont
 import tkFileDialog
@@ -11,8 +11,6 @@ class ClientUI(Frame):
         self.parent = Tk()
         Frame.__init__(self, self.parent)
         self.init_ui()
-        self.file_queue = []
-        self.file_opt = {}
 
     def init_ui(self):
         self.parent.title("Copy Qat")
@@ -33,6 +31,7 @@ class ClientUI(Frame):
         file_frame = Frame(self, relief=RAISED, borderwidth=1)
         file_frame.pack(fill=X)
 
+        # Create label and listbox and attach to file_frame
         fileLabel = Label(file_frame, text="Files", width=6)
         fileLabel.pack(side=LEFT, anchor=N, padx=5, pady=5)
 
@@ -46,7 +45,7 @@ class ClientUI(Frame):
         # Attach buttons to button_frame. padx can take a 2-tuple for left and right padding
         close_button = Button(button_frame, text="Exit", command=self.quit)
         close_button.pack(side=RIGHT, padx=(5, 50))
-        send_button = Button(button_frame, text="Send Files")
+        send_button = Button(button_frame, text="Send Files", command=self.send_files)
         send_button.pack(side=RIGHT, padx=(5, 5))
         ok_button = Button(button_frame, text="Add File(s)", command=self.add_file_to_queue)
         ok_button.pack(side=RIGHT, padx=(5, 5))
@@ -62,10 +61,18 @@ class ClientUI(Frame):
         y = (screen_height - height) / 2
         self.parent.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
+    # Add the file name in string form to file_list
     def add_file_to_queue(self):
-        file_opt_file = tkFileDialog.askopenfile(mode='r')
-        self.file_queue.append(file_opt_file)
+        file_opt_file = tkFileDialog.askopenfilename()
         self.file_list.insert(END, file_opt_file)
+
+    def send_files(self):
+        client = Client.Client()
+        client.connect("127.0.0.1", 8181)
+        file_names = list(self.file_list.get(0,self.file_list.size() - 1))
+        client.open_files(file_names)
+        client.read_files()
+        client.send_files()
 
     def start(self):
         self.parent.mainloop()

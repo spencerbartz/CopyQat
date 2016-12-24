@@ -9,13 +9,13 @@ from CopyCat import KennyLogger
 def main():
     ui = ClientUI.ClientUI()
     ui.start()
-    
+
     # file = "testfile.txt"
     # serverIP = "127.0.0.1"
     # serverPort = 8181
     #
-    # kennyLogger = KennyLogger.KennyLogger()
-    # kennyLogger.initialize("clientlogs")
+    kennyLogger = KennyLogger.KennyLogger()
+    kennyLogger.initialize("clientlogs")
     #
     # # parse command line options
     # try:
@@ -47,7 +47,7 @@ def main():
     #     kennyLogger.error("Failed to connect to server. IP: " + serverIP + " port: " + str(serverPort))
     #     sys.exit(1)
     #
-    # client.openFiles(file)
+    # client.open_files(file)
     # client.readFiles()
     # client.sendFiles()
 
