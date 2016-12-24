@@ -17,22 +17,22 @@ class Server(threading.Thread):
 
     def __init__(self, saveDir = "CopyCatFiles", port = 8181, maxConn = 5):
         super(Server, self).__init__()
-        
+
         self.saveDir = saveDir
         self.port = port
         self.maxConn = maxConn
-        
+
         #Create / Locate the directory in which we will save received files
         if not os.path.exists(self.saveDir):
             os.makedirs(self.saveDir)
-        
-        self.kennyLogger = KennyLogger.KennyLogger()        
+
+        self.kennyLogger = KennyLogger.KennyLogger()
         self.kennyLogger.logInfo("Starting Server")
 
         self.running = False
         self.clientHandlers = []
         self.setDaemon(True)
-        
+
         #Create Server Socket and start listening
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -40,7 +40,7 @@ class Server(threading.Thread):
         self.serversocket.listen(self.maxConn)
         self.running = True
 
- 
+
     #################################################################
     # run()
     # Override of inherited method run() from threading.Thread
@@ -51,19 +51,19 @@ class Server(threading.Thread):
     # process the connection
     # @param self
     # @return None
-    #################################################################  
+    #################################################################
     def run(self):
         while self.running == True:
             self.kennyLogger.logInfo("Listening for connections")
             try:
                 (clientsocket, address) = self.serversocket.accept()
-                self.kennyLogger.logInfo("Accepted Connection from " + address[0] + " on port " + address[1])
-                
+                self.kennyLogger.logInfo("Accepted Connection from " + address[0] + " on port " + str(address[1]))
+
                 newClient = ClientHandler.ClientHandler(clientsocket, self.saveDir, address)
                 newClient.start()
-                
+
                 self.clientHandlers.append(newClient)
-         
+
             except OSError as e:
                 #most likely serversocket.close() was called by shutdown(), which also
                 #sets self.running to false so we will not start listening for connections
@@ -83,13 +83,13 @@ class Server(threading.Thread):
     # will exit, thus completing the server thread. The class that
     # instantiates a Server object is responsible for calling .join()
     # to ensure the thread has run to completion.
-    #################################################################  
-    @MyUtil.synchronized_method              
+    #################################################################
+    @MyUtil.synchronized_method
     def shutdown(self):
         self.kennyLogger.logInfo("Shutting Down")
         self.running = False;
         self.serversocket.close()
         for handler in self.clientHandlers:
             handler.join()
-    
+
 

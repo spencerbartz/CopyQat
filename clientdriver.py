@@ -5,22 +5,22 @@ from CopyCat import Client
 from CopyCat import KennyLogger
 
 def main():
-    
-    file = "testfile.txt;blah.txt;javascript.gif"
+
+    file = "testfile.txt"
     serverIP = "127.0.0.1"
     serverPort = 8181
 
     kennyLogger = KennyLogger.KennyLogger()
     kennyLogger.initialize("clientlogs")
-   
+
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hf:i:p:", ["help", "file", "ip", "port"])
-    except getopt.GetOptError as msg:
-        print(msg)
+        opts, args = getopt.getopt(sys.argv[1:], "hf:i:p:", ["help", "file=", "ip=", "port="])
+    except getopt.GetOptError as errMsg:
+        print(errMsg)
         print("for help use --help")
         sys.exit(2)
-        
+
     # process options
     for o, a in opts:
         if o in ("-h", "--help", "-help"):
@@ -32,7 +32,9 @@ def main():
             serverIP = a
         elif o in ("-p", "--port", "-port"):
             serverPort = int(a)
-            
+        else:
+            assert False, "Unhandled Option"
+
     # process arguments
     #for arg in args:
     #    print(arg) # process() is defined elsewhere
@@ -45,7 +47,7 @@ def main():
         print("The server at <", serverIP, "> on port <", serverPort, "> is not running.")
         kennyLogger.error("Failed to connect to server. IP: " + serverIP + " port: " + str(serverPort))
         sys.exit(1)
-        
+
     client.openFiles(file)
     client.readFiles()
     client.sendFiles()

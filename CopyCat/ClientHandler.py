@@ -26,25 +26,25 @@ class ClientHandler(threading.Thread):
     #################################################################
     # run()
     # @return None
-    #################################################################  
+    #################################################################
     def run(self):
-        
+
         self.kennyLogger.logInfo("Receiving File(s)")
         moreFiles = True
-        
+
         while moreFiles == True:
             #get file names and sizes
             data = self.clientsocket.recv(2048).decode()
-            
+
             if not data:
                 moreFiles = False
                 break
-            
+
             (fileName, fileSize) = data.split(";")
-            
+
             #open local file on server for writing
             outFile = open(self.saveDir + os.sep + fileName, "wb")
-       
+
             #Tell the client we are ready to accept the file
             self.sendAck()
 
@@ -65,25 +65,25 @@ class ClientHandler(threading.Thread):
                     #buffer.extend(data)
                     totalRead += len(data)
                     #print("total read ", totalRead)
-             
-            #print(buffer)   
+
+            #print(buffer)
             #outfile.write(buffer)
-            
+
             #Tell the client the file was received and written
             self.sendAck()
-            
+
             elapsed = timeit.default_timer() - startTime
             outFile.close()
             self.kennyLogger.logInfo("File Received: " + fileName + "(" + elapsed + " seconds)")
-        
-        self.kennyLogger.logInfo("Connection Closed: " + self.address[0] + " on port " + self.address[1])    
+
+        self.kennyLogger.logInfo("Connection Closed: " + self.address[0] + " on port " + str(self.address[1]))    
         self.clientsocket.close()
- 
+
     #################################################################
     # sendAck()
     # @param String msg - message to send to the server
     # @return None
-    #################################################################         
+    #################################################################
     def sendAck(self):
         self.kennyLogger.logDebug("Sending Ack")
         sent = self.clientsocket.send("OK".encode())
@@ -91,5 +91,4 @@ class ClientHandler(threading.Thread):
         if sent == 0:
             self.kennyLogger.logError("Could not send ack to client")
             raise RuntimeError("socket connection broken")
-        
-    
+
