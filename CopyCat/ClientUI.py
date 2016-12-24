@@ -68,7 +68,7 @@ class ClientUI(Frame):
 
     def send_files(self):
         client = Client.Client()
-        client.connect("127.0.0.1", 8181)
+        client.connect("192.168.0.4", 8181)
         file_names = list(self.file_list.get(0,self.file_list.size() - 1))
         client.open_files(file_names)
         client.read_files()
