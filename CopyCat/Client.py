@@ -15,14 +15,15 @@ class Client:
     def __init__(self, sock = None):
 
         self.kennyLogger = KennyLogger.KennyLogger()
+        self.kennyLogger.initialize()
 
         if sock is None:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         else:
             self.sock = sock
 
-        self.fileObjects = []
-        self.fileContents = []
+        self.file_objects = []
+        self.file_contents = []
         self.fileInfo = ""
 
 
@@ -35,106 +36,91 @@ class Client:
         self.sock.connect((host, port))
 
     #################################################################
-    # sendFiles()
+    # send_files()
     # @param msg
     # @return None
     #################################################################
-    def sendFiles(self):
-
-        if self.fileObjects == []:
+    def send_files(self):
+        if self.file_objects == []:
             self.kennyLogger.logError("Error, file object list was empty")
             return
 
-        if self.fileContents == []:
+        if self.file_contents == []:
             print("Error file contents list was empty")
             return
 
-        for fileObj, fileText in zip(self.fileObjects, self.fileContents):
-                fileSize = len(fileText)
+        for file_obj, file_text in zip(self.file_objects, self.file_contents):
+                file_size = len(file_text)
 
                 #send the server the file name and file size we want to send
-                self.sendMsg(fileObj.name + ";" + str(fileSize))
+                self.send_msg(os.path.basename(file_obj.name) + ";" + str(file_size))
 
                 #receive the OK from the server
-                if self.recvAck() == False:
-                    print("File '", fileObj.name, "' not sent. Could not get acknowledgement from server")
+                if self.recv_ack() == False:
+                    print("File '", file_obj.name, "' not sent. Could not get acknowledgement from server")
                     return
 
                 #Windows does something strange where the os.fstat file size may be larger than the actual number of
-                #bytes available to be read, so we won't use this: < os.fstat(self.fileObject.fileno()).st_size >
-                fileSize = len(fileText)
+                #bytes available to be read, so we won't use this: < os.fstat(self.file_object.fileno()).st_size >
+                file_size = len(file_text)
+                total_sent = 0
 
-                #print(fileSize)
-                totalsent = 0
-
-                startTime = timeit.default_timer()
-                while totalsent < fileSize:
-                    #print("sending data...")
-                    sent = self.sock.send(fileText[totalsent:])
-                    #print("sent ", sent)
+                start_time = timeit.default_timer()
+                while total_sent < file_size:
+                    sent = self.sock.send(file_text[total_sent:])
                     if sent == 0:
                         raise RuntimeError("socket connection broken")
-                    totalsent = totalsent + sent
+                    total_sent = total_sent + sent
 
-                if self.recvAck() == True:
+                if self.recv_ack() == True:
                     self.kennyLogger.logInfo("File sent successfully")
                 else:
                     self.kennyLogger.warn("File was sent but no ack from server")
-                elapsed = timeit.default_timer() - startTime
-                self.kennyLogger.logInfo("Total bytes sent: " + str(totalsent) + " (" + str(elapsed) + " seconds)")
+                elapsed = timeit.default_timer() - start_time
+                self.kennyLogger.logInfo("Total bytes sent: " + str(total_sent) + " (" + str(elapsed) + " seconds)")
 
     #################################################################
-    # sendMsg()
+    # send_msg()
     # @param String msg - message to send to the server
     # @return None
     #################################################################
-    def sendMsg(self, msg):
+    def send_msg(self, msg):
+        total_sent = 0
 
-        totalsent = 0
-
-        while totalsent < len(msg):
-            sent = self.sock.send(msg[totalsent:].encode())
+        while total_sent < len(msg):
+            sent = self.sock.send(msg[total_sent:].encode())
             if sent == 0:
                 raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
+            total_sent = total_sent + sent
 
     #################################################################
-    # readFiles()
+    # read_files()
     # @param
     # @return None
     #################################################################
-    def readFiles(self):
-
-        for fileObj in self.fileObjects:
-            #self.fileInfo.join(fileObj.name + ";")
-
-            contents = fileObj.read()
-
-            #self.fileInfo.join(str(len(contents)) + ";")
-
-            self.fileContents.append(contents)
+    def read_files(self):
+        for file_obj in self.file_objects:
+            contents = file_obj.read()
+            self.file_contents.append(contents)
 
 
     #################################################################
-    # openFiles()
-    # @param String fileNames - Semicolon delimited list of file names
+    # open_files()
+    # @param String file_names - Semicolon delimited list of file names
     # @return None
     #################################################################
-    def openFiles(self, fileNames):
-        fileNames = fileNames.split(";")
-
-        for fileName in fileNames:
-            file = open(fileName, "rb")
-            self.kennyLogger.logInfo("Opened file: " + str(file))
-            self.fileObjects.append(file)
-
+    def open_files(self, file_names):
+        for file_name in file_names:
+            file = open(file_name, "rb")
+            self.kennyLogger.logInfo("Opened file: " + file.name)
+            self.file_objects.append(file)
 
     #################################################################
-    # recvAck()
+    # recv_ack()
     # @param
     # @return None
     #################################################################
-    def recvAck(self):
+    def recv_ack(self):
 
         chunks = []
         bytes_recd = 0
@@ -147,8 +133,6 @@ class Client:
             bytes_recd = bytes_recd + len(chunk)
 
         Ack = (b''.join(chunks)).decode()
-
-        #print("ACK", Ack)
 
         if Ack == "OK":
             return True;
