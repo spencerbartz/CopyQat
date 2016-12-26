@@ -35,7 +35,7 @@ class ClientUI(Frame):
         fileLabel = Label(file_frame, text="Files", width=6)
         fileLabel.pack(side=LEFT, anchor=N, padx=5, pady=5)
 
-        self.file_list = Listbox(file_frame, selectmode='multiple')
+        self.file_list = Listbox(file_frame, selectmode='extended')
         self.file_list.pack(side=LEFT, fill=BOTH, pady=5, padx=(0,50), expand=True)
 
         # Create a frame for buttons and attach to self
