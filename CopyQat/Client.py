@@ -8,7 +8,7 @@ import sys
 import timeit
 import inspect
 
-from CopyCat import KennyLogger
+from CopyQat import KennyLogger
 
 class Client:
 

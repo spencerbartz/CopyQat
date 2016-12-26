@@ -3,8 +3,8 @@ from Tkinter import *
 import getopt
 import sys
 
-from CopyCat import ClientUI
-from CopyCat import KennyLogger
+from CopyQat import ClientUI
+from CopyQat import KennyLogger
 
 def main():
     ui = ClientUI.ClientUI()

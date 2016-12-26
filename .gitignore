@@ -2,7 +2,7 @@
 *.txt
 *.pyc
 *.log
-CopyCatFiles/*
+CopyQatServerFiles/*
 .DS_Store
 *.swp
 

@@ -8,8 +8,8 @@ import socket
 import timeit
 import logging
 
-from CopyCat import MyUtil
-from CopyCat import KennyLogger
+from CopyQat import MyUtil
+from CopyQat import KennyLogger
 
 class ClientHandler(threading.Thread):
 
