@@ -2,6 +2,7 @@ from PIL import Image, ImageTk
 from Tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END
 from ttk import Frame, Button, Style, Label, Entry
 from CopyQat import Client
+from MyUtil import *
 import ttk
 import tkFont
 import tkFileDialog
@@ -15,7 +16,7 @@ class ClientUI(Frame):
     def init_ui(self):
         self.parent.title("Copy Qat")
         self.pack(fill = BOTH, expand = True)
-        self.center_window()
+        center_window(self, 600, 250)
 
         self.parent.attributes("-topmost", True)
         self.parent.focus_force()
@@ -52,19 +53,9 @@ class ClientUI(Frame):
         ok_button = Button(button_frame, text="Add File(s)", command=self.add_file_to_queue)
         ok_button.pack(side=RIGHT, padx=(5, 5))
 
-    def center_window(self):
-        width = 600
-        height = 250
-
-        screen_width = self.parent.winfo_screenwidth()
-        screen_height = self.parent.winfo_screenheight()
-
-        x = (screen_width - width) / 2
-        y = (screen_height - height) / 2
-        self.parent.geometry('%dx%d+%d+%d' % (width, height, x, y))
-
     def remove_files(self):
-        # Delete from Listbox
+        # Remove files in reverse order since deletion changes the indices
+        # of selected items. (I.e. delete 0th item -> 1st item becomes 0th item)
         indices = list(self.file_list.curselection())
         indices.reverse()
         for i in indices:
@@ -73,10 +64,15 @@ class ClientUI(Frame):
     def send_files(self):
         client = Client.Client()
         client.connect("127.0.0.1", 8181)
-        file_names = list(self.file_list.get(0, self.file_list.size() - 1))
-        client.open_files(file_names)
+
+        selected_indices = list(self.file_list.curselection())
+        all_files = list(self.file_list.get(0, self.file_list.size() - 1))
+        selected_files = [all_files[i] for i in selected_indices]
+
+        client.open_files(selected_files)
         client.read_files()
         client.send_files()
+        self.remove_files()
 
     # Add the file name in string form to file_list
     def add_file_to_queue(self):
