@@ -9,9 +9,9 @@ import time
 import sys
 import threading
 
-from CopyCat import MyUtil
-from CopyCat import ClientHandler
-from CopyCat import KennyLogger
+from CopyQat import MyUtil
+from CopyQat import ClientHandler
+from CopyQat import KennyLogger
 
 class Server(threading.Thread):
 
