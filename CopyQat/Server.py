@@ -67,8 +67,8 @@ class Server(threading.Thread):
             except OSError as e:
                 #most likely serversocket.close() was called by shutdown(), which also
                 #sets self.running to false so we will not start listening for connections
-             	self.kennyLogger.logDebug("Handled OSError in main server loop " + str(e))
-              	pass
+                self.kennyLogger.logDebug("Handled OSError in main server loop " + str(e))
+                pass
 
 
     #################################################################

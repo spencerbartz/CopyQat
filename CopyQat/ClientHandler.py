@@ -64,7 +64,7 @@ class ClientHandler(threading.Thread):
                 else:
                     outFile.write(data)
                     totalRead += len(data)
-                    print fileName + "- PERCENT READ: " +  str(round(float(totalRead) / float(fileSize) * 100, 2)) + "%"
+                    prin(fileName + "- PERCENT READ: " +  str(round(float(totalRead) / float(fileSize) * 100, 2)) + "%")
 
             #Tell the client the file was received and written
             self.sendAck()

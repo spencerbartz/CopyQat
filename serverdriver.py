@@ -43,10 +43,10 @@ def main():
     running = True
 
     while running:
-            try:
-                userInput = input("Press Ctrl-c to exit\n")
-            except (KeyboardInterrupt, EOFError):
-                break
+        try:
+            userInput = input("Press Ctrl-c to exit\n")
+        except (KeyboardInterrupt, EOFError):
+            break
 
     server.shutdown()
     server.join()
