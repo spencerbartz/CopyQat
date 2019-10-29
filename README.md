@@ -9,6 +9,6 @@ The Client now has a GUI based on TKinter.
 * *your_prompt$>* __python serverdriver.py --help__
 
 ### Dependencies
-[Python 3](https://www.python.org/downloads/)
-[pip](https://pip.pypa.io/en/stable/installing/)
-[Pillow](https://pypi.org/project/Pillow/2.2.2/)
+[Python 3](https://www.python.org/downloads/)  
+[pip](https://pip.pypa.io/en/stable/installing/)  
+[Pillow](https://pypi.org/project/Pillow/2.2.2/)  
