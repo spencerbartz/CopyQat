@@ -1,11 +1,11 @@
+
 from PIL import Image, ImageTk
-from Tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END
-from ttk import Frame, Button, Style, Label, Entry
+from tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END, font, filedialog
+from tkinter.ttk import Frame, Button, Style, Label, Entry
+
 from CopyQat import Client
-from MyUtil import *
-import ttk
-import tkFont
-import tkFileDialog
+from CopyQat import MyUtil
+from CopyQat.MyUtil import *
 
 class ClientUI(Frame):
     def __init__(self):
