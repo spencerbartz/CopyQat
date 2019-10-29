@@ -55,6 +55,5 @@ def main():
 def signal_handler(signal, frame):
     running = False
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
