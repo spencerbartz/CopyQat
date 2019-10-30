@@ -8,37 +8,46 @@ from CopyQat import MyUtil
 from CopyQat.MyUtil import *
 
 class ClientUI(Frame):
-    # CONSTRUCTOR
+    WIDTH = 600
+    HEIGHT = 250
+
+    # FUNCTION: __init__()
+    # DESC: Initialize Tk, Begin this Frame's rendering loop
+    # and initialize UI elements
     def __init__(self):
         self.parent = Tk()
         Frame.__init__(self, self.parent)
         self.init_ui()
 
-    # INITIALIZE UI: WINDOW, LABELS, BUTTONS, FILE NAME LIST BOX
+    # FUNCTION: init_ui()
+    # DESC: Create and center parent Frame (self), add labels, buttons
+    # and list box for file names if multiple files are selected
     def init_ui(self):
-        # DRAW WINDOW AND TITLE
+        # Add title and center this window
         self.parent.title("Copy Qat")
         self.pack(fill = BOTH, expand = True)
-        center_window(self, 600, 250)
+        center_window(self, self.WIDTH, self.HEIGHT)
 
+        # Force window to come to highest z-index (-topmost) and grab focus
         self.parent.attributes("-topmost", True)
         self.parent.focus_force()
        
-        self.style = Style()
-        self.style.theme_use("default")
+        # Set window and GUI look and feel
+        self.parent.style = Style()
+        self.parent.style.theme_use("clam")
 
-        # CREATE A FRAME FOR FILE LIST AND ATTACH TO SELF
+        # Create frame for holding file list and add
         file_frame = Frame(self, relief=RAISED, borderwidth=1)
         file_frame.pack(fill=X)
 
-        # CREATE LABEL & LISTBOX AND ATTACH TO file_frame
+        # Create label & listbox, attach to file_frame
         file_label = Label(file_frame, text="Files", width=6)
         file_label.pack(side=LEFT, anchor=N, padx=5, pady=5)
 
         self.file_list = Listbox(file_frame, selectmode='extended')
         self.file_list.pack(side=LEFT, fill=BOTH, pady=5, padx=(0,50), expand=True)
 
-        # CREATE A FRAME FOR BUTTONS & ATTACH TO SELF
+        # Create frame for buttons and attach to self 
         button_frame = Frame(self)
         button_frame.pack(fill=BOTH)
 

@@ -88,7 +88,7 @@ class Client:
         total_sent = 0
 
         while total_sent < len(msg):
-            sent = self.sock.send(msg[total_sent:].encode())
+            sent = self.sock.send(msg[total_sent:].encode('utf-8'))
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             total_sent = total_sent + sent

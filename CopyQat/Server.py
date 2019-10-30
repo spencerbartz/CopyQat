@@ -15,16 +15,16 @@ from CopyQat import KennyLogger
 
 class Server(threading.Thread):
 
-    def __init__(self, saveDir = "CopyCatFiles", port = 8181, maxConn = 5):
+    def __init__(self, save_dir = "CopyCatFiles", port = 8181, maxConn = 5):
         super(Server, self).__init__()
 
-        self.saveDir = saveDir
+        self.save_dir = save_dir
         self.port = port
         self.maxConn = maxConn
 
         #Create / Locate the directory in which we will save received files
-        if not os.path.exists(self.saveDir):
-            os.makedirs(self.saveDir)
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
 
         self.kennyLogger = KennyLogger.KennyLogger()
         self.kennyLogger.logInfo("Starting Server")
@@ -59,7 +59,7 @@ class Server(threading.Thread):
                 (clientsocket, address) = self.serversocket.accept()
                 self.kennyLogger.logInfo("Accepted Connection from " + address[0] + " on port " + str(address[1]))
 
-                newClient = ClientHandler.ClientHandler(clientsocket, self.saveDir, address)
+                newClient = ClientHandler.ClientHandler(clientsocket, self.save_dir, address)
                 newClient.start()
 
                 self.clientHandlers.append(newClient)
