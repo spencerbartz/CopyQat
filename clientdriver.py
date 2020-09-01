@@ -1,8 +1,5 @@
 from tkinter import *
 
-import getopt
-import sys
-
 from CopyQat import ClientUI
 from CopyQat import KennyLogger
 
@@ -12,8 +9,8 @@ def main():
     ui.start()
   
     # INITIALIZE SINGLETON LOGGER
-    kennyLogger = KennyLogger.KennyLogger()
-    kennyLogger.initialize("clientlogs")
+    clientLogger = KennyLogger.KennyLogger()
+    clientLogger.initialize("client_logs")
 
 if __name__ == "__main__":
     main()

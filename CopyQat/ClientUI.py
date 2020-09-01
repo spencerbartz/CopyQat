@@ -1,6 +1,6 @@
 
 from PIL import Image, ImageTk
-from tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END, font, filedialog
+from tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END, font, filedialog, Menu
 from tkinter.ttk import Frame, Button, Style, Label, Entry
 
 from CopyQat import Client
@@ -19,12 +19,59 @@ class ClientUI(Frame):
         Frame.__init__(self, self.parent)
         self.init_ui()
 
+    # Menu action handler functions
+    def help(self):
+        print("help()")
+
+    def about(self):
+        print("about()")
+
+    def new_item(self):
+        print("new()")
+
+    def open(self):
+        print("new()")
+
+    def save(self):
+        print("save()")
+
+    def file_item(self):
+        print("file_item()")
+
     # FUNCTION: init_ui()
     # DESC: Create and center parent Frame (self), add labels, buttons
     # and list box for file names if multiple files are selected
     def init_ui(self):
+   
+        menubar = Menu(self.parent)
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="New", command=self.new_item)
+        filemenu.add_command(label="Open", command=self.open)
+        filemenu.add_command(label="Save", command=self.save)
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit", command=self.parent.quit)
+        menubar.add_cascade(label="File", menu=filemenu)
+
+        helpmenu = Menu(menubar, tearoff=0)
+        helpmenu.add_command(label="Help Index", command=self.help)
+        helpmenu.add_command(label="About...", command=self.about)
+
+        # Add the options to the menu 
+        menubar.add_cascade(label="Help", menu=helpmenu)
+
+        self.parent.config(menu=menubar)
+        # self.parent.mainloop()
+
+        # create a toplevel menu
+        menubar = Menu(self.parent)
+        menubar.add_command(label="File", command=self.file_item)
+        menubar.add_command(label="Exit", command=self.parent.quit)
+
+        # display the menu
+        self.parent.config(menu=menubar)
+
         # Add title and center this window
-        self.parent.title("Copy Qat")
+        self.parent.title("Copy Qat Client")
         self.pack(fill = BOTH, expand = True)
         center_window(self, self.WIDTH, self.HEIGHT)
 
@@ -93,6 +140,6 @@ class ClientUI(Frame):
         self.parent.mainloop()
 
 if __name__ == '__main__':
-     c = ClientUI()
-     c.start()
+     client_ui = ClientUI()
+     client_ui.start()
 
