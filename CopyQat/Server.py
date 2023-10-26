@@ -27,6 +27,7 @@ class Server(threading.Thread):
             os.makedirs(self.save_dir)
 
         self.kennyLogger = KennyLogger.KennyLogger()
+        self.kennyLogger.initialize("server_logs");
         self.kennyLogger.logInfo("Starting Server")
 
         self.running = False

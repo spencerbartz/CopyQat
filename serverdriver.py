@@ -4,7 +4,7 @@ from CopyQat import ServerUI
 from CopyQat import KennyLogger
 
 def main():
-    # INITIALIZE AND START CLIENT UI
+    # INITIALIZE AND START SERVER UI
     ui = ServerUI.ServerUI()
     ui.start()
   

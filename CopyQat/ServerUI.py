@@ -2,10 +2,12 @@
 from PIL import Image, ImageTk
 from tkinter import Tk, Text, RIGHT, BOTH, RAISED, X, Y, N, W, LEFT, Listbox, END, font, filedialog
 from tkinter.ttk import Frame, Button, Style, Label, Entry
+import signal
 
-from CopyQat import Client
+from CopyQat import Server
 from CopyQat import MyUtil
 from CopyQat.MyUtil import *
+from CopyQat import KennyLogger
 
 class ServerUI(Frame):
     WIDTH = 480
@@ -23,6 +25,10 @@ class ServerUI(Frame):
     # DESC: Create and center parent Frame (self), add labels, buttons
     # and list box for file names if multiple files are selected
     def init_ui(self):
+        serverLogger = KennyLogger.KennyLogger()
+        serverLogger.initialize("server_logs")
+        serverLogger.logInfo("Initializing Server UI")
+
         # Add title and center this window
         self.parent.title("Copy Qat Server")
         self.pack(fill = BOTH, expand = True)
@@ -41,11 +47,11 @@ class ServerUI(Frame):
         conn_frame.pack(fill=X)
 
         # Create label & listbox, attach to file_frame
-        conn_label = Label(conn_frame, text="User Connections", width=6)
-        conn_label.pack(side=LEFT, anchor=N, padx=5, pady=5)
+        conn_label = Label(conn_frame, text="User Connections", width=20)
+        conn_label.pack(side=LEFT, anchor=N, padx=5, pady=20)
 
         self.file_list = Listbox(conn_frame, selectmode='extended')
-        self.file_list.pack(side=LEFT, fill=BOTH, pady=5, padx=(0,50), expand=True)
+        self.file_list.pack(side=LEFT, fill=BOTH, pady=20, padx=(0,50), expand=True)
 
         # Create frame for buttons and attach to self 
         button_frame = Frame(self)
@@ -54,8 +60,18 @@ class ServerUI(Frame):
         # ATTACH BUTTONS TO button_frame. Attach buttons to button_frame. padx CAN TAKE A 2-TUPLE FOR LEFT & RIGHT PADDING
         exit_button = Button(button_frame, text="Exit", command=self.quit)
         exit_button.pack(side=RIGHT, padx=(5, 50))
+        run_button = Button(button_frame, text="Run Server", command=self.run_server)
+        run_button.pack(side=RIGHT, padx=(5, 50))
         kick_button = Button(button_frame, text="Kick User", command=self.kick_user)
         kick_button.pack(side=RIGHT, padx=(5, 5))
+
+    def run_server(self):
+        signal.signal(signal.SIGINT, self.signal_handler)
+        self.server = Server.Server()        
+        self.server.start()
+
+    def signal_handler(self, signal, frame):
+        self.server.running = False
 
     def kick_user(self):
         print("user kicked")

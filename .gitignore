@@ -3,6 +3,7 @@
 *.pyc
 *.log
 CopyQatServerFiles/*
+CopyQatFiles/*
 .DS_Store
 *.swp
 
